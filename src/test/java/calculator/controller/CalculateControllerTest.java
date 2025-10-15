@@ -1,6 +1,7 @@
 package calculator.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import calculator.config.ComponentManager;
@@ -17,8 +18,8 @@ class CalculateControllerTest {
     CalculateController calculateController = componentManager.getCalculateController();
 
     @ParameterizedTest
-    @CsvFileSource(resources = "/calculator/controller/test.csv")
-    void run(String inputValue, int result) {
+    @CsvFileSource(resources = "success_test.csv")
+    void run_성공(String inputValue, int result) {
         // given
         System.setIn(new ByteArrayInputStream(inputValue.getBytes(StandardCharsets.UTF_8)));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -29,5 +30,16 @@ class CalculateControllerTest {
 
         // then
         assertThat(outputStream.toString()).contains("결과 : " + result);
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(resources = "failure_test.csv")
+    void run_실패(String inputValue) {
+        // given
+        System.setIn(new ByteArrayInputStream(inputValue.getBytes(StandardCharsets.UTF_8)));
+
+        // when & then
+        assertThatThrownBy(() -> calculateController.run())
+                .isExactlyInstanceOf(IllegalArgumentException.class);
     }
 }
