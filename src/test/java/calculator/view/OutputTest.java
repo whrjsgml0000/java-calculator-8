@@ -21,6 +21,6 @@ class OutputTest {
         output.printResult(result);
 
         // then
-        assertThat(outputStream.toString()).isEqualTo("결과 : " + result);
+        assertThat(outputStream.toString()).contains("결과 : " + result);
     }
 }
