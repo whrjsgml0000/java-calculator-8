@@ -21,7 +21,7 @@ class CalculateControllerTest {
     @CsvFileSource(resources = "success_test.csv")
     void run_성공(String inputValue, int result) {
         // given
-        System.setIn(new ByteArrayInputStream(inputValue.getBytes(StandardCharsets.UTF_8)));
+        System.setIn(new ByteArrayInputStream((inputValue+"\n").getBytes(StandardCharsets.UTF_8)));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
@@ -36,7 +36,7 @@ class CalculateControllerTest {
     @CsvFileSource(resources = "failure_test.csv")
     void run_실패(String inputValue) {
         // given
-        System.setIn(new ByteArrayInputStream(inputValue.getBytes(StandardCharsets.UTF_8)));
+        System.setIn(new ByteArrayInputStream((inputValue+"\n").getBytes(StandardCharsets.UTF_8)));
 
         // when & then
         assertThatThrownBy(() -> calculateController.run())

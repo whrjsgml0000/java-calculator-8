@@ -17,6 +17,8 @@ public class CalculateController {
     }
 
     public void run() {
-        throw new IllegalArgumentException();
+        String raw = input.requestSumString();
+        int sum = calculateService.sum(raw);
+        output.printResult(sum);
     }
 }
