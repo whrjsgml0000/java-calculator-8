@@ -21,24 +21,36 @@ public abstract class Operation {
     }
 
     private void parse() throws IllegalArgumentException {
+        parseCustomSeparator();
+        parseElement();
+
+        for (int i = 0; i < elements.size(); i++) {
+            if (elements.get(i).isBlank()) {
+                elements.set(i, "0");
+            }
+        }
+    }
+
+    private void parseElement() {
+        StringBuilder delimiters = new StringBuilder();
+        delimiters.append("[");
+        for (Character separator : separators) {
+            delimiters.append(separator);
+            if(separator.equals('\\')){
+                delimiters.append("\\");
+            }
+        }
+        delimiters.append("]+");
+        elements.addAll(List.of(raw.split(delimiters.toString())));
+    }
+
+    private void parseCustomSeparator() {
         if (raw.startsWith("//")) {
             if (raw.length() < 5 || !raw.substring(0, 5).endsWith("\\n")) {
                 throw new IllegalArgumentException("커스텀 구분자 등록 양식이 잘못됐습니다.");
             }
             separators.add(raw.charAt(2));
             raw = raw.substring(5);
-        }
-
-        StringBuilder delimiters = new StringBuilder();
-        delimiters.append("[");
-        separators.forEach(it -> delimiters.append(it));
-        delimiters.append("]+");
-        elements.addAll(List.of(raw.split(delimiters.toString())));
-
-        for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i).isBlank()) {
-                elements.set(i, "0");
-            }
         }
     }
 
